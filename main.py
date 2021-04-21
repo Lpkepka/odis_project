@@ -18,12 +18,14 @@ while True:
         break
 
     splitLine = line.strip().split(' ')
-    day = splitLine[0]
-    hour = splitLine[1]
+    day = splitLine[0] #format -> MM/dd
+    hour = splitLine[1] #format -> HH:mm:ss
     event = splitLine[2]
-    text = ''.join(splitLine[3:]).replace(':', '').replace('.', '')
+    text = ''.join(splitLine[3:]).replace(':', '').replace('.', '') #removes all the ;..... from the front
     formattedDate = '2021-{}-{} {}'.format(day.split('/')[0], day.split('/')[1], hour)
+
     sql = 'INSERT INTO Logs(message, event_type, server_id, date) VALUES(?, ?, 1, ?);'
     c.execute(sql, [text, event, formattedDate])
+
 file1.close()
 conn.commit()
