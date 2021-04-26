@@ -43,7 +43,8 @@ def scheduleNewDataFetch(sc, url, interval):
 def launchAPICalls():
     for key in globalConfiguration:
         s.enter(1, 1, scheduleNewDataFetch, (s, key, globalConfiguration[key]))
-        s.run()
+
+    s.run()
 
 if __name__ == '__main__':
     importConfiguration()
