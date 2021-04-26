@@ -1,24 +1,27 @@
 import sqlite3
-import threading
 import requests
+import sched, time
 
+globalConfiguration = {}
 conn = sqlite3.connect('Logs.db')
 c = conn.cursor()
+s = sched.scheduler(time.time, time.sleep)
 
 def importConfiguration():
-    configurationFile = open('logs.txt', 'r')
+    configurationFile = open('configuration.txt', 'r')
     while True:
         line = configurationFile.readline()
         if not line:
             break
         splitLine = line.split(" ")
-        globalConfiguration[splitLine[0]] = splitLine[1]
+        globalConfiguration[splitLine[0]] = int(splitLine[1])
 
     configurationFile.close()
 
 def insertDataToDB(dataDictionary, serverURL):
-    for line in dataDictionary:
-        splitLine = line.strip().replace('- - ', '').split(' ')
+    dataArray = dataDictionary.split(',')
+    for line in dataArray:
+        splitLine = line.strip().replace('- - ', '').replace(' +', '+').split(' ')
         ip_addr = splitLine[0]
         date = splitLine[1].replace('[', '').replace(']', '')
         method = splitLine[2]
@@ -31,26 +34,25 @@ def insertDataToDB(dataDictionary, serverURL):
     conn.commit()
 
 
-def fetchNewData(interval, url):
-    threading.Timer(interval, fetchNewData).start()
+def scheduleNewDataFetch(sc, url, interval):
     response = requests.get(url)
     insertDataToDB(response.json()["Logs"], url)
+    print('Sending to:', url)
+    s.enter(interval, 1, scheduleNewDataFetch, (sc, url, interval))
 
 def launchAPICalls():
-    for url, timeoutValue in globalConfiguration.items():
-        fetchNewData(timeoutValue, url)
+    for key in globalConfiguration:
+        s.enter(1, 1, scheduleNewDataFetch, (s, key, globalConfiguration[key]))
+        s.run()
 
-
-globalConfiguration = {}
-importConfiguration()
-
-c.execute('''CREATE TABLE IF NOT EXISTS Logs(
-            ip_addr text,
-            server_url text,
-            method text,
-            path text,
-            response_code text,
-            http_version text,
-            date date)''')
-
-launchAPICalls()
+if __name__ == '__main__':
+    importConfiguration()
+    c.execute('''CREATE TABLE IF NOT EXISTS Logs(
+                ip_addr text,
+                server_url text,
+                method text,
+                path text,
+                response_code text,
+                http_version text,
+                date date)''')
+    launchAPICalls()

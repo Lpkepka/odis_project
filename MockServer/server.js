@@ -7,16 +7,13 @@ app.get('/', (req, res) => {
 })
 
 app.get("/api", function(req, res)  { 
-
         var fs = require('fs');
         fs.readFile('log.txt', 'utf8', function(err,data) {
             if(err) throw err;
             let splitted = data.toString().replace(/"/g, '').split("\n");
             var json = JSON.parse('{"Logs" : "' + splitted.toString() + '"}');
-            console.log(json);
-            res.json(json) 
+            res.json(json)
         });
-        
 });
 
 app.listen(port, () => {
