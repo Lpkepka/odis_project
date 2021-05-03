@@ -1,6 +1,7 @@
 import sqlite3
 import csv
 from datetime import datetime, timedelta
+import time
 
 conn = sqlite3.connect('Logs.db')
 c = conn.cursor()
@@ -43,29 +44,53 @@ def buildSqlQuery(configuration, configurationRows):
 
     finalQueryString = baseQuery.format(conditionalQuery)
     finalQueryString += ';'
-    sqlSelectors.append((finalQueryString, count))
+    return (finalQueryString, count)
 
 def importAnalyzerConfiguration():
     with open('analyzeConfiguration.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         configurationRows = []
+        ifCount = 0
+        goingToElse = False
         for row in csv_reader:
             if line_count == 0:
-                configurationRows = row
+                configurationRows = row[1:]
             else:
-                buildSqlQuery(row, configurationRows)
+                if row[0] == 'if':
+                    query = buildSqlQuery(row[1:], configurationRows)
+                    numberOfResults = exectureSQLQuery(query[0])
+                    ifCount += 1
+                    goingToElse = numberOfResults > query[1]
+                elif row[0] == 'else':
+                    if goingToElse and ifCount == 1:
+                        goingToElse = False
+                        query = buildSqlQuery(row[1:], configurationRows)
+                        sqlSelectors.append(query)
+                    else:
+                        ifCount -= 1
+                else:
+                    if not goingToElse:
+                        query = buildSqlQuery(row[1:], configurationRows)
+                        sqlSelectors.append(query)
             line_count += 1
+
+def exectureSQLQuery(query):
+    c.execute(query[0])
+    rows = c.fetchall()
+    return int(rows[0][0])
 
 def executeSQLQueries():
     for query in sqlSelectors:
-        c.execute(query[0])
-        rows = c.fetchall()
+        rowCount = exectureSQLQuery(query[0])
         print('------------------- Raport ------------------')
-        print('Found {} rows matching data from configuration'.format(int(rows[0][0])))
+        print('Found {} rows matching data from configuration'.format(rowCount))
         print('Expected less than {} rows'.format(query[1]))
         print('------------------------------------- \n\n')
 
 
 importAnalyzerConfiguration()
-executeSQLQueries()
+
+while True:
+    executeSQLQueries()
+    time.sleep(10)
