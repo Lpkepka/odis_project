@@ -7,6 +7,17 @@ conn = sqlite3.connect('Logs.db')
 c = conn.cursor()
 s = sched.scheduler(time.time, time.sleep)
 
+def parseApacheLogs(line):
+    splitLine = line.strip().replace('- - ', '').replace(' +', '+').split(' ')
+    ip_addr = splitLine[0]
+    date = splitLine[1].replace('[', '').replace(']', '')
+    method = splitLine[2]
+    path = splitLine[3]
+    http_version = splitLine[4]
+    response_code = splitLine[5]
+
+    return (ip_addr, method, path, response_code, http_version, date)
+
 def importConfiguration():
     configurationFile = open('configuration.txt', 'r')
     while True:
@@ -21,16 +32,9 @@ def importConfiguration():
 def insertDataToDB(dataDictionary, serverURL):
     dataArray = dataDictionary.split(',')
     for line in dataArray:
-        splitLine = line.strip().replace('- - ', '').replace(' +', '+').split(' ')
-        ip_addr = splitLine[0]
-        date = splitLine[1].replace('[', '').replace(']', '')
-        method = splitLine[2]
-        path = splitLine[3]
-        http_version = splitLine[4]
-        response_code = splitLine[5]
-
+        values = parseApacheLogs(line)
         sql = 'INSERT INTO Logs(ip_addr,server_url,method,path,response_code,http_version,date) VALUES(?, ?, ?, ?, ?, ?, ?);'
-        c.execute(sql, [ip_addr, serverURL, method, path, response_code, http_version, date])
+        c.execute(sql, [values[0], serverURL, values[1], values[2], values[3], values[4], values[5]])
     conn.commit()
 
 
