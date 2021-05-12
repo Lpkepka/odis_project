@@ -71,6 +71,7 @@ def importAnalyzerConfiguration():
         line_count = 0
         configurationRows = []
         ifCount = 0
+        ifCountForNextElse = 0
         goingToElse = False
         for row in csv_reader:
             if line_count == 0:
@@ -80,9 +81,10 @@ def importAnalyzerConfiguration():
                     query = buildSqlQuery(row[1:], configurationRows)
                     numberOfResults = exectureSQLQuery(query)
                     ifCount += 1
+                    ifCountForNextElse = ifCount
                     goingToElse = numberOfResults > query[1]
                 elif row[0] == 'else':
-                    if goingToElse and ifCount == 1:
+                    if goingToElse and ifCount == ifCountForNextElse:
                         goingToElse = False
                         query = buildSqlQuery(row[1:], configurationRows)
                         sqlSelectors.append(query)
@@ -95,13 +97,13 @@ def importAnalyzerConfiguration():
             line_count += 1
 
 def exectureSQLQuery(query):
-    print(query[0])
     c.execute(query[0])
     rows = c.fetchall()
     return int(rows[0][0])
 
 def executeSQLQueries():
     for query in sqlSelectors:
+        print(query[0])
         rowCount = exectureSQLQuery(query)
         if rowCount > query[1]:
             print('------------------- Raport ------------------')
