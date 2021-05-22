@@ -6,12 +6,13 @@ class QueryBuilder:
         self.data = []
 
     def buildSqlQuery(self, configuration, configurationRows):
-        baseQuery = 'SELECT Count(*) FROM Logs WHERE{}'
+        baseQuery = 'SELECT Count(*) FROM Logs WHERE {}'
         conditionalQuery = ''
         cutOffArray = configuration[:-4]
         dataArray = configuration[-4:-2]
         isPositive = configuration[-2] == '1'
         count = int(configuration[-1])
+        splitDates = dataArray[0].split(';')
         for i, conditions in enumerate(cutOffArray):
             if conditions != '-':
                 equal = '' if isPositive else 'NOT '
@@ -29,8 +30,7 @@ class QueryBuilder:
             elif conditionalQuery[-3:] == 'OR ':
                 conditionalQuery = ' AND '.join(conditionalQuery.rsplit('OR ', 1))
 
-        if ((dataArray[0] != '-') and (dataArray[1] != '-')):
-            splitDates = dataArray[0].split(';')
+        if ((dataArray[0] is not '-') and (dataArray[1] is not '-')):
             if len(splitDates) > 1:
                 conditionalQuery += '('
             for date in splitDates:
@@ -42,12 +42,15 @@ class QueryBuilder:
         else:
             conditionalQuery = conditionalQuery[:-4]
 
-        conditionalQuery = conditionalQuery[:-3]
-        if len(splitDates) > 1:
-            conditionalQuery += ')'
+        if conditionalQuery[-3:] == ' OR':
+            conditionalQuery = conditionalQuery[:-3]
+        if splitDates is not None:
+            if len(splitDates) > 1:
+                conditionalQuery += ')'
 
         finalQueryString = baseQuery.format(conditionalQuery)
         finalQueryString += ';'
+        finalQueryString = finalQueryString.replace("  ", " ").replace(" ;", ";")
         return (finalQueryString, count)
 
     def getTimeDeltaFor(self, text):
