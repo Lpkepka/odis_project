@@ -10,28 +10,28 @@ class TestParser(unittest.TestCase):
     ApacheLog = '127.0.0.1 – frank [10/Oct/2000:13:55:36 -0700] “GET /apache_pb.gif HTTP/1.0” 200 2326'
     invalidLog = 'asdklsajdklajsd'
 
-    def test_apache_logs_ip(self):
+    def test_apache_log(self):
         values = parser.parseLogs(self.ApacheLog)
         self.assertEqual(len(values), 6)
         self.assertEqual(values[0], '127.0.0.1')
         self.assertEqual(values[2], '/apache_pb.gif')
         self.assertEqual(values[3], '200')
 
-    def test_HTTPLog_ip(self):
+    def test_HTTPLog(self):
         values = parser.parseLogs(self.HTTPLog)
         self.assertEqual(len(values), 6)
         self.assertEqual(values[0], '')
         self.assertEqual(values[2], '/tutorials/other/top-20-mysql-best-practices/')
         self.assertEqual(values[3], '')
 
-    def test_IISLog_ip(self):
+    def test_IISLog(self):
         values = parser.parseLogs(self.IISLog)
         self.assertEqual(len(values), 6)
         self.assertEqual(values[0], '192.168.114.201')
         self.assertEqual(values[2], '/DeptLogo.gif')
         self.assertEqual(values[3], '200')
 
-    def test_ELBLog_ip(self):
+    def test_ELBLog(self):
         values = parser.parseLogs(self.ELBLog)
         self.assertEqual(len(values), 6)
         self.assertEqual(values[0], '192.168.131.39')
