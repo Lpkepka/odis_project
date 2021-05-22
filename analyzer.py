@@ -1,6 +1,8 @@
 import sqlite3
 import csv
 import queryBuilder
+import datetime
+import time
 
 conn = sqlite3.connect('Logs.db')
 c = conn.cursor()
@@ -46,17 +48,17 @@ def executeSQLQueries():
             generateTXTRaport(query[0], query[1], rowCount)
 
 def generateTXTRaport(query, expectedRows, foundRows):
-    print('------------------- Raport ------------------')
-    print('Found {} rows matching data from configuration'.format(foundRows))
-    print('Expected less than {} rows'.format(expectedRows))
-    print('Query {}'.format(query))
-    print('------------------------------------- \n\n')
+    outF = open("generatedReports.txt", "a")
+    outF.write('------------------- {} ------------------ \n'.format(datetime.date.today().strftime('%Y-%m-%d-%H:%M:%S')))
+    outF.write('Found {} rows matching data from configuration\n'.format(foundRows))
+    outF.write('Expected less than {} rows\n'.format(expectedRows))
+    outF.write('Query {}\n'.format(query))
+    outF.write('\n\n')
 
 def exectureSQLQuery(query):
     c.execute(query[0])
     rows = c.fetchall()
     return int(rows[0][0])
-
 
 while True:
     sqlSelectors.clear()
