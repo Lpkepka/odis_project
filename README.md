@@ -1,2 +1,0 @@
-# odis_project
-
