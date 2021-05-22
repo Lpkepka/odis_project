@@ -59,9 +59,9 @@ class LogParser:
 
         ip_addr = ''
         date = ''
-        method = values[2]
-        path = values[0]
-        http_version = values[1]
+        method = values[0]
+        path = values[1]
+        http_version = values[2]
         response_code = ''
 
         return (ip_addr, method, path, response_code, http_version, date)
