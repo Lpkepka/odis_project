@@ -25,6 +25,8 @@ class LogParser:
         elif re.match(elbRegex, line) is not None:
             values = self.parseELBLogs(line)
             return values
+        else:
+            return None
 
     def parseELBLogs(self, line):
         values = re.findall(elbRegex, line)[0]
