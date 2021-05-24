@@ -82,6 +82,15 @@ def representsInt(s):
 
 if __name__ == '__main__':
     timeout = 30
+    # If the DB is empty, creates the table upon starting the script
+    c.execute('''CREATE TABLE IF NOT EXISTS Logs(
+                    ip_addr text,
+                    server_url text,
+                    method text,
+                    path text,
+                    response_code text,
+                    http_version text,
+                    date date)''')
     if (len(sys.argv) == 2):
         timeoutValue = sys.argv[1]
         # Check if the provided value is an integer value for timeout
