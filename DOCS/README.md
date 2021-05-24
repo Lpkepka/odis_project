@@ -8,7 +8,7 @@ Projekt składa się z trzech głównych części: pozyskiwania logów z zewnęt
 
 Dostęp do zewnętrznego serwera możliwy jest za pomocą http. Następnie logi są pobierane w formie pliku tekstowego. Zarówno częstotliwość pobierania jak i adres url serwera można wybrać i dostosować do swoich potrzeb. 
 
-Analiza logów, która jest złożonym problemem została skonfigurowana tak, aby użytkownik mógł sam ustawić parametry wykrywania zdarzeń. W pliku tekstowym można ustawić konfigurację, między innymi za pomocą warunków if-else, wzorców pozytywnych i negatywnych. Można wybrać adres url serwera, metodę, ścieżkę, kod odpowiedzi, wersję http, datę z granulacją i liczbę wystąpień. Konfiguracja pozwala na wskazywanie kilku wartości dla danej zmiennej oraz umożliwia pominięcie niektórych z nich. Wspierane jest wiele formatów logów takich jak:
+Analiza logów, która jest złożonym problemem została skonfigurowana tak, aby użytkownik mógł sam ustawić parametry wykrywania zdarzeń. W pliku analyzerConfiguration.csv można ustawić konfigurację, między innymi za pomocą warunków if-else, wzorców pozytywnych i negatywnych. Można wybrać adres url serwera, metodę, ścieżkę, kod odpowiedzi, wersję http, datę z granulacją i liczbę wystąpień. Konfiguracja pozwala na wskazywanie kilku wartości dla danej zmiennej oraz umożliwia pominięcie niektórych z nich. Wspierane jest wiele formatów logów takich jak:
 >- apache
 >- nginx
 >- iis
