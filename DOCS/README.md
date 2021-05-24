@@ -2,7 +2,7 @@
 
 ## Wprowadzenie
 
-Projekt składa się z trzech głównych części. Pozyskiwania logów z zewnętrznego serwera, analizy tych logów oraz przygotowania raportu w formie pliku tekstowego. Ma za zadanie wychwytywać podejrzane zdarzenia i ostrzec w ten sposób użytkownika przed zagrożeniami dla systemu. 
+Projekt składa się z trzech głównych części: pozyskiwania logów z zewnętrznego serwera, analizy tych logów oraz przygotowania raportu w formie pliku tekstowego. Ma za zadanie wychwytywać podejrzane zdarzenia i ostrzec w ten sposób użytkownika przed zagrożeniami dla systemu. 
 
 ## Zakres projektu
 
@@ -20,7 +20,7 @@ Jeżeli zostały wykryte logi w liczbie przewyższającej podaną w konfiguracji
 
 ## Wykorzystane technologie
 
-Przy wyborze języka oprogramowania analizowaliśmy głównie dwie opcję Javę oraz Pythona. Finalnie został wybrany Python ze względu na jego przystępną składnię, szybkość oraz wydajność oraz możliwość uruchomienia w postaci skryptu, bez konieczności generowania gotowych do instalacji paczek.
+Przy wyborze języka oprogramowania analizowaliśmy głównie dwie opcję Javę oraz Pythona. Finalnie został wybrany Python ze względu na jego przystępną składnię, wydajność oraz możliwość uruchomienia w postaci skryptu, bez konieczności generowania gotowych do instalacji paczek.
 
 ## Opis metodyki prowadzonych prac
 
