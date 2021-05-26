@@ -24,11 +24,12 @@ def importConfiguration():
 def insertDataToDB(dataDictionary, serverURL):
     # Logs are split in new lines with the ',' delimiter and parsed by the logParser module
     # SQL queries are inserted with the c.execute to prevent unwanted injections
-    dataArray = dataDictionary.split(',')
+    dataArray = dataDictionary
     for line in dataArray:
         values = parser.parseLogs(line)
-        sql = 'INSERT INTO Logs(ip_addr,server_url,method,path,response_code,http_version,date) VALUES(?, ?, ?, ?, ?, ?, ?);'
-        c.execute(sql, [values[0], serverURL, values[1], values[2], values[3], values[4], values[5]])
+        if values is not None :
+            sql = 'INSERT INTO Logs(ip_addr,server_url,method,path,response_code,http_version,date) VALUES(?, ?, ?, ?, ?, ?, ?);'
+            c.execute(sql, [values[0], serverURL, values[1], values[2], values[3], values[4], values[5]])
     conn.commit()
 
 

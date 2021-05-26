@@ -30,27 +30,27 @@ class LogParser:
 
     def parseELBLogs(self, line):
         values = re.findall(elbRegex, line)[0]
-        ip_addr = values[2].split(':')[0]
+        ip_addr = values[2].split(':')[0].replace('"', '')
         datetimeString = values[0].replace('T', ' ').replace('Z', '')
         datetimeObject = datetime.datetime.strptime(datetimeString, '%Y-%m-%d %H:%M:%S.%f')
         date = datetimeObject.strftime('%d/%b/%Y:%I:%M:%S%z') + '+0000'
-        method = values[11].split(' ')[0]
-        path = values[11].split(' ')[1]
-        http_version = values[11].split(' ')[2]
-        response_code = values[7]
+        method = values[11].split(' ')[0].replace('"', '')
+        path = values[11].split(' ')[1].replace('"', '')
+        http_version = values[11].split(' ')[2].replace('"', '')
+        response_code = values[7].replace('"', '')
 
         return (ip_addr, method, path, response_code, http_version, date)
 
     def parseIISLogs(self, line):
         values = re.findall(IISRegex, line)[0]
-        ip_addr = values[0]
+        ip_addr = values[0].replace('"', '')
         datetimeString = values[2]
         datetimeObject = datetime.datetime.strptime(datetimeString, '%m/%d/%y, %H:%M:%S')
         date = datetimeObject.strftime('%d/%b/%Y:%I:%M:%S%z') + '+0000'
-        method = values[11]
-        path = values[12]
-        http_version = values[1]
-        response_code = values[9]
+        method = values[11].replace('"', '')
+        path = values[12].replace('"', '')
+        http_version = values[1].replace('"', '')
+        response_code = values[9].replace('"', '')
 
         return (ip_addr, method, path, response_code, http_version, date)
 
@@ -59,9 +59,9 @@ class LogParser:
 
         ip_addr = ''
         date = ''
-        method = values[0]
-        path = values[1]
-        http_version = values[2]
+        method = values[0].replace('"', '')
+        path = values[1].replace('"', '')
+        http_version = values[2].replace('"', '')
         response_code = ''
 
         return (ip_addr, method, path, response_code, http_version, date)
@@ -69,11 +69,11 @@ class LogParser:
     def parseApacheLogs(self, line):
         values = re.findall(apacheRegex, line)[0]
 
-        ip_addr = values[0]
+        ip_addr = values[0].replace('"', '')
         date = values[3]
-        method = values[4]
-        path = values[5]
-        http_version = values[6]
-        response_code = values[7]
+        method = values[4].replace('"', '')
+        path = values[5].replace('"', '')
+        http_version = values[6].replace('"', '')
+        response_code = values[7].replace('"', '')
 
         return (ip_addr, method, path, response_code, http_version, date)
